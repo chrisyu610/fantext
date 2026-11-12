@@ -1,36 +1,26 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 玄幻書庫
 
-## Getting Started
+統計 PTT CFantasy（玄幻小說板）的推薦、嘗毒、實況與討論文章，依討論熱度排出小說排行榜，支援關鍵字搜尋與全本 TXT 下載。
 
-First, run the development server:
+## 功能
+
+- **排行榜**：本週 / 本月 / 近三月 / 全部。熱度 = 各篇文章（推薦 ×3、嘗毒與討論 ×2、實況 ×1）以推文與回應數加權後加總。
+- **關鍵字搜尋**：先搜排行榜內的書（繁簡通用），再即時搜尋看板文章標題，涵蓋尚未進榜的新書。
+- **全本 TXT 下載**：把已取得授權的檔案放進 `library/`（檔名為書名，如 `仙人消失之後.txt`），比對成功的書就會出現下載按鈕。本站不爬取或存放未經授權的小說全文。
+
+## 執行
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev        # http://localhost:4817
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 更新資料
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm run crawl                 # 預設抓最近 400 頁（約 1 萬篇），再重建排行榜資料
+PAGES=800 npm run crawl       # 抓更久遠的文章
+npm run build-data            # 只用現有 data/posts.json 重建 data/novels.json
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+資料來源為 PTT 網頁鏡像 pttweb.cc（ptt.cc 本站有 Cloudflare 驗證）。書名由文章標題擷取：`lib/extract.ts`；彙整與合併：`lib/aggregate.ts`。
